@@ -1,221 +1,190 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width,
-								initial-scale=1.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Sudoku Puzzle</title>
-	<style>
-		body {
-			font-family: Arial, sans-serif;
-			background-color: #F5FCFF;
+	<style>.number-row {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+	  }
+	  
+	  .number {
+		width: 30px;
+		height: 30px;
+		background-color: #f0f0f0;
+		border: 1px solid #ccc;
+		text-align: center;
+		font-size: 18px;
+		cursor: pointer;
+	  }
+	  
+	  .number:hover {
+		background-color: #ccc;
+	  }
+	  
+	  .number-container {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+	  }
+	  
+	  .number-row:nth-child(3n) {
+		border-bottom: 3px solid #333;
+	  }
+	  
+	  .number:nth-child(3n) {
+		border-right: 3px solid #333;
+	  }
+	  
+	  .text-center{
+		padding-top: 12px;
+		text-align: center;
+	  }
+	  
+	  button{
+		 background-image: linear-gradient(to right, #EB3349 0%, #F45C43  51%, #EB3349  100%);
+		 margin: 10px;
+		 padding: 15px 45px;
+		 text-align: center;
+		 text-transform: uppercase;
+		 transition: 0.5s;
+		 background-size: 200% auto;
+		 color: white;            
+		 box-shadow: 0 0 20px #eee;
+		 border-radius: 10px;
+		 border: none;
+		 font-size: 19px;
 		}
-
-		.container {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			margin-top: 50px;
-		}
-
-		.row {
-			display: flex;
-		}
-
-		.cell {
-			width: 30px;
-			height: 30px;
-			border: 1px solid black;
-			text-align: center;
-			line-height: 30px;
-			box-sizing: border-box;
-		}
-
-		.lightBackground {
-			background-color: #A9A9A9;
-		}
-
-		.darkBackground {
-			background-color: #EBF3E8;
-		}
-
-		.buttonContainer {
-			margin-top: 20px;
-			display: flex;
-			/* Ensure buttons are always displayed */
-			align-items: center;
-			justify-content: center;
-		}
-
-		.buttonContainer button {
-			margin-right: 10px;
-			/* Add margin between buttons */
-		}
-
-		.result {
-			margin-top: 20px;
-			font-weight: bold;
-		}
-
-		.correct {
-			color: green;
-		}
-
-		.incorrect {
-			color: red;
-		}
-	</style>
+	  
+	   button:hover {
+		 background-position: right center; 
+		 color: #fff;
+		 text-decoration: none;
+	   }
+	  </style>
 </head>
 
 <body>
-
-	<div class="container" id="container"></div>
-
-	<div class="buttonContainer">
-		<button id="solveButton">Solve</button>
-		<button id="resetButton">Reset</button>
-	</div>
-
-	<script>
-		document.addEventListener("DOMContentLoaded", function () {
-			const container = document.getElementById("container");
-
-			
-			function generateRandomSudoku() {
-				
-				const puzzle = [
-					[5, 3, 0, 0, 7, 0, 0, 0, 0],
-					[6, 0, 0, 1, 9, 5, 0, 0, 0],
-					[0, 9, 8, 0, 0, 0, 0, 6, 0],
-					[8, 0, 0, 0, 6, 0, 0, 0, 3],
-					[4, 0, 0, 8, 0, 3, 0, 0, 1],
-					[7, 0, 0, 0, 2, 0, 0, 0, 6],
-					[0, 6, 0, 0, 0, 0, 2, 8, 0],
-					[0, 0, 0, 4, 1, 9, 0, 0, 5],
-					[0, 0, 0, 0, 8, 0, 0, 7, 9]
-				];
-				return puzzle;
+	<div id="number-container"></div>
+	<div class="text-center">
+		<div class="timeRanges"></div>
+		<input type="text" id="name" required>
+		<button id="set">Set</button>
+		<button id="stop">Stop</button>
+		<button id="restart">Restart</button>
+		<div id="score">Score: </div>
+		
+		<button type="button" id="level1">Level 1</button>
+		<button type="button" id="level2">Level 2</button>
+		<button type="button" id="level3">Level 3</button>
+		<script>function initializeGame(difficulty) {
+			let TotalNumber_set = 81;
+			const buttons = [];
+			const number_set = new Set();
+			const number = [];
+			var CaratArray = [];
+		  
+			localStorage.removeItem('number');
+		  
+			const container = document.getElementById("number-container");
+			container.innerHTML = '';
+		  
+			const nameInput = document.getElementById('name');
+			nameInput.value = '';
+			alert("Enter your name to start a new game!");
+		  
+			for (let i = 0; i < 9; i++) {
+			  number[i] = [];
+			  for (let j = 0; j < 9; j++) {
+				var randomValue;
+				do {
+				  randomValue = Math.floor(Math.random() * 9) + 1;
+				} while (
+				  number[i].includes(randomValue) ||
+				  number.some((row, rowIndex) => rowIndex !== i && row[j] === randomValue) ||
+				  checkSubGridNew(number, i, j, randomValue)
+				);
+				number[i][j] = randomValue;
+				CaratArray.push(randomValue);
+				console.log('CaratArray :', CaratArray);
+		  
+				if (difficulty === 'easy' && Math.random() < 0.95) {
+				  number[i][j] = " ";
+				} else if (difficulty === 'medium' && Math.random() < 0.85) {
+				  number[i][j] = " ";
+				} else if (difficulty === 'hard' && Math.random() < 0.75) {
+				  number[i][j] = " ";
+				}
+			  }
 			}
+		  
+			for (let i = 0; i < number.length; i++) {
+			  var row = document.createElement("div");
+			  row.className = "number-row";
+			  for (let j = 0; j < number[i].length; j++) {
+				var numDiv = document.createElement("div");
+				numDiv.className = "number";
+				numDiv.textContent = number[i][j];
+				buttons.push(numDiv);
+		  
+				numDiv.addEventListener('click', (function (i, j) {
+  return function (event) {
+    const target = event.target;
+    const currentValue = target.textContent;
 
-			
-			function solveSudoku(board) {
-				
-				const solvedPuzzle = JSON.parse(JSON.stringify(board));
-				solveHelper(solvedPuzzle);
-				return solvedPuzzle;
+    if (currentValue == " ") {
+      const newValue = prompt("Enter a new value (1-9):");
+      if (!isValidNumber(newValue)) {
+        alert("Invalid input. Please enter a number between 1 and 9.");
+      } else if (
+        number[i].includes(parseInt(newValue)) ||
+        number.some((row, rowIndex) => rowIndex !== i && row[j] === parseInt(newValue)) ||
+        checkSubGridNew(number, i, j, parseInt(newValue))
+      ) {
+        alert("this number is not match.");
+      } else {
+        target.textContent = newValue;
+        number[i][j] = newValue;
+
+        let storedNumber = JSON.parse(localStorage.getItem('number')) || [];
+        if (!storedNumber[i]) {
+          storedNumber[i] = [];
+        }
+        storedNumber[i][j] = newValue;
+
+        localStorage.removeItem('number'); 
+		localStorage.setItem('number', JSON.stringify(storedNumber)); 
+
+        number_set.add(newValue);
+        updateScore();
+      }
+    }
+  };
+})(i, j));
+				row.appendChild(numDiv);
+			  }
+			  container.appendChild(row);
 			}
-
-			
-			function solveHelper(board) {
-				const emptyCell = findEmptyCell(board);
-				if (!emptyCell) {
-					return true; 
-					}
-
-				const [row, col] = emptyCell;
-				for (let num = 1; num <= 9; num++) {
-					if (isValidMove(board, row, col, num)) {
-						board[row][col] = num;
-						if (solveHelper(board)) {
-							return true;
-						}
-						board[row][col] = 0; 
-						}
-				}
-				return false; 
-				}
-
-			
-				function findEmptyCell(board) {
-				for (let row = 0; row < 9; row++) {
-					for (let col = 0; col < 9; col++) {
-						if (board[row][col] === 0) {
-							return [row, col];
-						}
-					}
-				}
-				return null; 
-				}
-
-			
-				function isValidMove(board, row, col, num) {
-				
-				for (let i = 0; i < 9; i++) {
-					if (board[row][i] === num) {
-						return false;
-					}
-				}
-				
-				for (let i = 0; i < 9; i++) {
-					if (board[i][col] === num) {
-						return false;
-					}
-				}
-				
-				const startRow = Math.floor(row / 3) * 3;
-				const startCol = Math.floor(col / 3) * 3;
-				for (let i = startRow; i < startRow + 3; i++) {
-					for (let j = startCol; j < startCol + 3; j++) {
-						if (board[i][j] === num) {
-							return false;
-						}
-					}
-				}
-				return true; 
-				}
-
-			
-				function createSudokuGrid(puzzle) {
-				container.innerHTML = '';
-				puzzle.forEach((row, rowIndex) => {
-					const rowElement = document.createElement('div');
-					rowElement.classList.add('row');
-					row.forEach((cell, columnIndex) => {
-						const cellElement = document.createElement('input');
-						cellElement.classList.add('cell');
-						cellElement.classList
-							.add((rowIndex + columnIndex) % 2 === 0 ?
-								'lightBackground' : 'darkBackground');
-						cellElement.type = 'text';
-						cellElement.maxLength = 1;
-						cellElement.value = cell !== 0 ? cell : '';
-						rowElement.appendChild(cellElement);
-					});
-					container.appendChild(rowElement);
-				});
-			}
-
-			
-			let initialPuzzle = generateRandomSudoku();
-			let puzzle = JSON.parse(JSON.stringify(initialPuzzle));
-			let solvedPuzzle = [];
-
-			
-			function solvePuzzle() {
-				solvedPuzzle = solveSudoku(puzzle);
-				createSudokuGrid(solvedPuzzle);
-			}
-
-			
-			function resetPuzzle() {
-				initialPuzzle = generateRandomSudoku();
-				puzzle = JSON.parse(JSON.stringify(initialPuzzle));
-				solvedPuzzle = [];
-				createSudokuGrid(puzzle);
-			}
-
-			
-			createSudokuGrid(puzzle);
-
-			
-			document.getElementById("solveButton")
-				.addEventListener("click", solvePuzzle);
-			document.getElementById("resetButton")
-				.addEventListener("click", resetPuzzle);
-		});
-	</script>
-
+		  }
+		  
+		  initializeGame('medium');
+		  
+		  function checkSubGridNew(number, i, j, randomValue) {
+			return false;
+		  }
+		  
+		  function isValidNumber(newValue) {
+			return newValue >= 1 && newValue <= 9;
+		  }
+		  
+		  function updateScore() {
+  const scoreElement = document.getElementById("score");
+  score++;
+  scoreElement.textContent = `Score: ${score}`;
+  localStorage.setItem("score", score);
+}
+</script>
 </body>
-
-</html>
+</html> -->

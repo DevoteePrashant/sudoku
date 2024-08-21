@@ -167,6 +167,10 @@ function isValidNumber(num) {
 
 document.getElementById('level2').addEventListener("click", (i, j) => {
   console.log(' :', "LOG 2");
+
+  saveGameState();
+
+
   let TotalNumber_set = 81;
   const buttons = [];
   const number_set = new Set();
@@ -257,8 +261,27 @@ document.getElementById('level2').addEventListener("click", (i, j) => {
     }
     container.appendChild(row);
   }
-  
 });
+
+function saveGameState() {
+  const storedNumber = JSON.parse(localStorage.getItem('number')) || [];
+  localStorage.setItem('number', JSON.stringify(storedNumber));
+}
+
+function loadGameState() {
+  const storedNumber = JSON.parse(localStorage.getItem('number'));
+  if (storedNumber) {
+    number = storedNumber;
+    CaratArray = number.flat();
+    updateScore();
+    generateHTML();
+  }
+}
+
+window.onload = function() {
+  loadGameState();
+};
+
 
 document.getElementById('level3').addEventListener("click", (i, j) => {
   console.log(' :', "LOG 3 ");
@@ -360,7 +383,6 @@ window.onload = function() {
   nameInput.value = '';
   nameInput.focus();
   alert("Enter your name to start a new game!");
-  
 }
 
 
@@ -387,6 +409,7 @@ function updateScore() {
   const emptyCells = number.flat().filter(cell => cell === " ").length;
   const newScore = (CaratArray.length - emptyCells) + 0;
   document.getElementById("score").innerHTML = newScore.toString();
+  localStorage.setItem("newScore",newScore)
 }
 
 for (let i = 0; i < 9; i++) {
@@ -563,13 +586,13 @@ document.getElementById('stop').addEventListener("click", stopTimer);
 
 const setNameButton = document.getElementById('set');
 const nameInput = document.getElementById('name');
-const nameDisplay = document.createElement('span');
+const span = document.getElementById('span');
 
 setNameButton.addEventListener('click', () => {
   const enteredName = nameInput.value.trim();
   if (enteredName !== '') {
     nameDisplay.textContent = `Hello, ${enteredName}!`;
-    document.body.appendChild(nameDisplay);
+    document.body.appendChild(span);
   } else {
     alert('Please enter your name!');
   }

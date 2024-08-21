@@ -31,3 +31,29 @@
 .number:nth-child(3n) {
   border-right: 3px solid #333;
 }
+
+.text-center{
+  padding-top: 12px;
+  text-align: center;
+}
+
+button{
+   background-image: linear-gradient(to right, #EB3349 0%, #F45C43  51%, #EB3349  100%);
+   margin: 10px;
+   padding: 15px 45px;
+   text-align: center;
+   text-transform: uppercase;
+   transition: 0.5s;
+   background-size: 200% auto;
+   color: white;            
+   box-shadow: 0 0 20px #eee;
+   border-radius: 10px;
+   border: none;
+   font-size: 19px;
+  }
+
+ button:hover {
+   background-position: right center; 
+   color: #fff;
+   text-decoration: none;
+ }
