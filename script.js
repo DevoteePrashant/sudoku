@@ -23,6 +23,8 @@ function checkSubGridNew(arr, row, col, num) {
 }
 document.getElementById('level1').addEventListener("click", () => {
   console.log('LOG');
+  
+
   let TotalNumber_set = 81;
   const buttons = [];
   const number_set = new Set();
@@ -39,7 +41,7 @@ document.getElementById('level1').addEventListener("click", () => {
   nameInput.value = '';
   alert("Enter your name to start a new game!");
 
-  // Function to check subgrid for duplicate values
+  // Function to check subarid for duplicate values
   function checkSubGridNew(number, row, col, value) {
     const startRow = Math.floor(row / 3) * 3;
     const startCol = Math.floor(col / 3) * 3;
@@ -83,6 +85,12 @@ document.getElementById('level1').addEventListener("click", () => {
     }
   }
 
+  function updateScore() {
+    const emptyCells = number.flat().filter(cell => cell === " ").length;
+    const newScore = (CaratArray.length - emptyCells) + 0;
+    document.getElementById("score").innerHTML = newScore.toString();
+  }
+
   // Generate HTML elements for the numbers
   for (let i = 0; i < number.length; i++) {
     var row = document.createElement("div");
@@ -97,7 +105,7 @@ document.getElementById('level1').addEventListener("click", () => {
         return function(event) {
           const target = event.target;
           const currentValue = target.textContent;
-
+          
           if (currentValue == " ") {
             const newValue = prompt("Enter a new value (1-9):");
 
@@ -118,16 +126,17 @@ document.getElementById('level1').addEventListener("click", () => {
               }
               storedNumber[i][j] = newValue;
               number_set.add(newValue);
-
+              updateScore()
               localStorage.setItem('number', JSON.stringify(storedNumber));
             }
           }
         };
       })(i, j));
-      row.appendChild(numDiv);
+      row.appendChild(numDiv);                                                          
     }
     container.appendChild(row);
   }
+ 
 });
 
 
@@ -196,6 +205,12 @@ document.getElementById('level2').addEventListener("click", (i, j) => {
     }
   }
 
+  function updateScore() {
+    const emptyCells = number.flat().filter(cell => cell === " ").length;
+    const newScore = (CaratArray.length - emptyCells) + 0;
+    document.getElementById("score").innerHTML = newScore.toString();
+  }
+
   // Generate HTML elements for the numbers
   for (let i = 0; i < number.length; i++) {
     var row = document.createElement("div");
@@ -232,7 +247,7 @@ document.getElementById('level2').addEventListener("click", (i, j) => {
               }
               storedNumber[i][j] = newValue;
               number_set.add(newValue);
-      
+              updateScore()
               localStorage.setItem('number', JSON.stringify(storedNumber));
             }
           }
@@ -285,6 +300,13 @@ document.getElementById('level3').addEventListener("click", (i, j) => {
     }
   }
 
+  function updateScore() {
+    const emptyCells = number.flat().filter(cell => cell === " ").length;
+    const newScore = (CaratArray.length - emptyCells) + 0;
+    document.getElementById("score").innerHTML = newScore.toString();
+  }
+
+
   // Generate HTML elements for the numbers
   for (let i = 0; i < number.length; i++) {
     var row = document.createElement("div");
@@ -321,7 +343,7 @@ document.getElementById('level3').addEventListener("click", (i, j) => {
               }
               storedNumber[i][j] = newValue;
               number_set.add(newValue);
-      
+              updateScore()
               localStorage.setItem('number', JSON.stringify(storedNumber));
             }
           }
@@ -359,17 +381,12 @@ function checkSubGrid(arr, row, col, num) {
   return false;
 }
 
+
+
 function updateScore() {
-  parseInt(document.getElementById("score").innerHTML);
-  var emptyCells = 0;
-  for (let i = 0; i < 9; i++) {
-    for (let j = 0; j < 9; j++) {
-      if (number[i][j] === " ") {
-        emptyCells++;
-      }
-    }
-  }
-  document.getElementById("score").innerHTML = (CaratArray.length - emptyCells) + 20;
+  const emptyCells = number.flat().filter(cell => cell === " ").length;
+  const newScore = (CaratArray.length - emptyCells) + 0;
+  document.getElementById("score").innerHTML = newScore.toString();
 }
 
 for (let i = 0; i < 9; i++) {
@@ -413,9 +430,7 @@ function validateNumbers(arr) {
       }
     }
   }
-
   console.log("true");
-
   const container = document.getElementById("number-container");
 
   for (var i = 0; i < number.length; i++) {
@@ -427,35 +442,42 @@ function validateNumbers(arr) {
       numDiv.textContent = number[i][j];
       buttons.push(numDiv);
 
-      numDiv.addEventListener('click', (function(i, j) {
-  return function(event) {
-    const target = event.target;
-    const currentValue = target.textContent;
-    if (currentValue == " ") {
-      const newValue = prompt("Enter a new value (1-9):");
-      if (!isValidNumber(newValue)) {
-        alert("Invalid input. Please enter a number between 1 and 9.");
-      } else if (
-        number[i].includes(parseInt(newValue)) || 
-            number.some((row, rowIndex) => rowIndex !== i && row[j] === parseInt(newValue)) || 
-               checkSubGrid(number, i, j, parseInt(newValue))
-      ) {
-        alert("this number is not match .");
-      } else {
-        target.textContent = newValue;
-        number[i][j] = newValue; 
-        let storedNumber = JSON.parse(localStorage.getItem('number')) || [];
-        if (!storedNumber[i]) {
-          storedNumber[i] = [];
-        }
-        storedNumber[i][j] = newValue;
-        number_set.add(newValue);
-        updateScore()
-        localStorage.setItem('number', JSON.stringify(storedNumber));
-      }
-    }
-  };
-})(i, j));
+      numDiv.addEventListener(
+        "click",
+        (function (i, j) {
+          return function (event) {
+            const target = event.target;
+            const currentValue = target.textContent;
+            if (currentValue == " ") {
+              const newValue = prompt("Enter a new value (1-9):");
+              if (!isValidNumber(newValue)) {
+                alert("Invalid input. Please enter a number between 1 and 9.");
+              } else if (
+                number[i].includes(parseInt(newValue)) ||
+                number.some(
+                  (row, rowIndex) =>
+                    rowIndex !== i && row[j] === parseInt(newValue)
+                ) ||
+                checkSubGrid(number, i, j, parseInt(newValue))
+              ) {
+                alert("this number is not match .");
+              } else {
+                target.textContent = newValue;
+                number[i][j] = newValue;
+                let storedNumber =
+                  JSON.parse(localStorage.getItem("number")) || [];
+                if (!storedNumber[i]) {
+                  storedNumber[i] = [];
+                }
+                storedNumber[i][j] = newValue;
+                number_set.add(newValue);
+                updateScore();
+                localStorage.setItem("number", JSON.stringify(storedNumber));
+              }
+            }
+          };
+        })(i, j)
+      );
       row.appendChild(numDiv);
     }
     container.appendChild(row);
@@ -607,10 +629,10 @@ document.getElementById('restart').addEventListener("click", () => {
         return function(event) {
           const target = event.target;
           const currentValue = target.textContent;
-          CaratArray.push(newValue);
-      
+          
           if (currentValue == " ") {
             const newValue = prompt("Enter a new value (1-9):");
+            CaratArray.push(newValue);
             if (!isValidNumber(newValue)) {
               alert("Invalid input. Please enter a number between 1 and 9.");
             } else if (
