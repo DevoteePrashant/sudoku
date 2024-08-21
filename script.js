@@ -586,13 +586,13 @@ document.getElementById('stop').addEventListener("click", stopTimer);
 
 const setNameButton = document.getElementById('set');
 const nameInput = document.getElementById('name');
-const span = document.getElementById('span');
+const nameDisplay = document.getElementById('span');
 
 setNameButton.addEventListener('click', () => {
   const enteredName = nameInput.value.trim();
   if (enteredName !== '') {
     nameDisplay.textContent = `Hello, ${enteredName}!`;
-    document.body.appendChild(span);
+    document.body.appendChild(nameDisplay);
   } else {
     alert('Please enter your name!');
   }
