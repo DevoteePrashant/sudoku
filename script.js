@@ -613,18 +613,20 @@ function updateScore() {
   document.getElementById("score").innerHTML = score.toString();
 }
 
+// Call updateScore at regular intervals
+setInterval(updateScore, 1000); // update score every 1 second
 
 function addTimeRange() {
   const nameInput = document.getElementById('name');
   const name = nameInput.value;
-  updateScore()
+  const lastScore = score; // store the last score
   const newTimeRange = {
     id: timeRanges.length + 1,
     startTime: formatTime(startTime),
     userName: name,
     endTime: formatTime(endTime),
     currentTime: formatTime(endTime),
-    score:  score ,
+    score: lastScore, // use the last score
   };
   timeRanges.push(newTimeRange);
   console.log(timeRanges);
@@ -691,6 +693,12 @@ setNameButton.addEventListener('click', () => {
 
 
 document.getElementById('restart').addEventListener("click", () => {
+
+  score = 0;
+  document.getElementById("score").innerHTML = score.toString();
+  CaratArray = [];
+  number = [];
+
   let TotalNumber_set = 81;
   const buttons = [];
   const number_set = new Set();
