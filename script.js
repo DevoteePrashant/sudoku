@@ -102,6 +102,7 @@ document.getElementById('level1').addEventListener("click", () => {
               checkSubGridNew(number, i, j, parseInt(newValue))
             ) {
               alert("this number is not match .");
+              // target.style.color = "red";
             } else {
               target.textContent = newValue;
               number[i][j] = newValue; 
@@ -646,7 +647,7 @@ function addTimeRange() {
 function printTimeRanges() {
   const timeRangesDiv = document.getElementById('timeRangesDiv');
   const storedTimeRanges = JSON.parse(localStorage.getItem('timeRanges'));
-  let html = '<table border="1">';
+  let html = '<table border="1" class="text-center">';
   html += `
     <tr>
       <th>Id</th>
@@ -822,3 +823,102 @@ function checkSubGridNew(arr, row, col, num) {
   }
   return false;
 }
+
+
+
+
+
+
+// const win =  81;
+// let newScore = 19; // or some other value
+
+// console.log("1", newScore.toString());
+
+// const newScore2 = parseInt(newScore.toString());
+
+// console.log("1", newScore.toString());
+// // Check if CaratArray length is 19
+// if (newScore2 === win) {
+//   document.getElementById('message').textContent = 'Show Win';
+// } else {
+//   document.getElementById('message').textContent = 'Not Win';
+// }
+
+// const win = 81;
+// const newScore = score;
+
+// console.log("Current score:", newScore);
+
+// if (newScore === win) {
+//   document.getElementById('message').textContent = 'Show Win';
+// } else {
+//   document.getElementById('message').textContent = 'Not Win';
+// }
+
+// const win = 81;
+// let newScore = score;
+// let caratArray = caratArray;
+
+
+// console.log("Current score:", newScore);
+// console.log("Current score:", score);
+
+// if (newScore === win && caratArray.length === 19) {
+//   document.getElementById('message').textContent = 'Show Win';
+// } else {
+//   document.getElementById('message').textContent = 'Not Win';
+// }
+
+
+// console.log('score :', score);
+// let newScore = score;
+// console.log('score :', newScore.toString());
+// score = score + "_"; 
+// console.log('score :', score);
+// if (score === 19) {
+//   document.getElementById('message').textContent = 'Show Win';
+// } else {
+//   document.getElementById('message').textContent = 'Not Win';
+// }
+
+// let sudokuGrid = Array.from({ length: 9 }, () => Array(9).fill(0)); 
+// let undoStack = [];
+
+// function deepCopyGrid(grid) {
+//   return grid.map(row => [...row]);
+// }
+
+// function updateGrid(row, col, value) {
+//   sudokuGrid[row][col] = value;
+//   undoStack.push(deepCopyGrid(sudokuGrid)); 
+//   }
+
+// function undo() {
+//   if (undoStack.length > 0) {
+//     sudokuGrid = undoStack.pop();
+//     renderGrid();
+//   }
+// }
+
+// function erase(row, col) {
+//   updateGrid(row, col, 0);
+// }
+
+// document.getElementById('undo').addEventListener('click', undo);
+// document.getElementById('erase').addEventListener('click', function() {
+//   let row = parseInt(prompt("Enter row number (0-8)"), 10);
+//   let col = parseInt(prompt("Enter column number (0-8)"), 10);
+//   if (row >= 0 && row <= 8 && col >= 0 && col <= 8) {
+//     erase(row, col);
+//   } else {
+//     alert("Invalid row or column number.");
+//   }
+// });
+
+// function renderGrid() {
+  
+//   }
+
+
+
+// renderGrid();
