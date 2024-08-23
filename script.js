@@ -1,8 +1,8 @@
 let TotalNumber_set = 81;
 const buttons = [];
 const number_set = new Set();
-const number = [];
-var CaratArray = [];
+let number = [];
+let CaratArray = [];
 
 
 function checkSubGridNew(arr, row, col, num) {
@@ -25,10 +25,10 @@ document.getElementById('level1').addEventListener("click", () => {
   console.log('LOG');
   
 
-  let TotalNumber_set = 81;
-  const buttons = [];
-  const number_set = new Set();
-  const number = [];
+  // let TotalNumber_set = 81;
+  // const buttons = [];
+  // const number_set = new Set();
+  // const number = [];
   var CaratArray = [];
 
   //  name change
@@ -155,11 +155,13 @@ document.getElementById('level2').addEventListener("click", (i, j) => {
   saveGameState();
 
 
-  let TotalNumber_set = 81;
-  const buttons = [];
-  const number_set = new Set();
-  const number = [];
   var CaratArray = [];
+
+  // let TotalNumber_set = 81;
+  // const buttons = [];
+  // const number_set = new Set();
+  // const number = [];
+  // var CaratArray = [];
 
   //  name change
   localStorage.removeItem('number');
@@ -270,14 +272,21 @@ function loadGameState() {
 
 window.onload = function() {
   loadGameState();
+  
+ score = 0;
+ document.getElementById("score").innerHTML = score.toString();
+ CaratArray = []; // Reset CaratArray
+ puzzleNumber = []; // Reset puzzleNumber
+
 };
 
 document.getElementById('level3').addEventListener("click", (i, j) => {
   console.log(' :', "LOG 3 ");
-  let TotalNumber_set = 81;
-  const buttons = [];
-  const number_set = new Set();
-  const number = [];
+  // let TotalNumber_set = 81;
+  // const buttons = [];
+  // const number_set = new Set();
+  // const number = [];
+
   var CaratArray = [];
 
   //  name change
@@ -691,18 +700,17 @@ setNameButton.addEventListener('click', () => {
   }
 });
 
+let puzzleNumber = [];
+ 
+
 
 document.getElementById('restart').addEventListener("click", () => {
 
-  score = 0;
-  document.getElementById("score").innerHTML = score.toString();
-  CaratArray = [];
-  number = [];
 
-  let TotalNumber_set = 81;
-  const buttons = [];
-  const number_set = new Set();
-  const number = [];
+  // let TotalNumber_set = 81;
+  // const buttons = [];
+  // const number_set = new Set();
+  // const number = [];
   var CaratArray = [];
 
   //  name change
