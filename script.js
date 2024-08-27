@@ -824,101 +824,150 @@ function checkSubGridNew(arr, row, col, num) {
   return false;
 }
 
+const win = 81;
+
+const emptyCells = number.flat().filter(cell => cell === " ").length;
+    const newScore = (CaratArray.length - emptyCells) + 0;
+
+console.log("Current score:", newScore);
+console.log("Current score:", score);
+
+if (newScore === win ) {
+  document.getElementById('message').textContent = 'you are Win this ';
+} else {
+  document.getElementById('message').textContent = '';
+}
 
 
 
 
 
-// const win =  81;
-// let newScore = 19; // or some other value
-
-// console.log("1", newScore.toString());
-
-// const newScore2 = parseInt(newScore.toString());
-
-// console.log("1", newScore.toString());
-// // Check if CaratArray length is 19
-// if (newScore2 === win) {
-//   document.getElementById('message').textContent = 'Show Win';
-// } else {
-//   document.getElementById('message').textContent = 'Not Win';
-// }
-
-// const win = 81;
-// const newScore = score;
-
-// console.log("Current score:", newScore);
-
-// if (newScore === win) {
-//   document.getElementById('message').textContent = 'Show Win';
-// } else {
-//   document.getElementById('message').textContent = 'Not Win';
-// }
-
-// const win = 81;
-// let newScore = score;
-// let caratArray = caratArray;
 
 
-// console.log("Current score:", newScore);
-// console.log("Current score:", score);
-
-// if (newScore === win && caratArray.length === 19) {
-//   document.getElementById('message').textContent = 'Show Win';
-// } else {
-//   document.getElementById('message').textContent = 'Not Win';
-// }
 
 
-// console.log('score :', score);
-// let newScore = score;
-// console.log('score :', newScore.toString());
-// score = score + "_"; 
-// console.log('score :', score);
-// if (score === 19) {
-//   document.getElementById('message').textContent = 'Show Win';
-// } else {
-//   document.getElementById('message').textContent = 'Not Win';
-// }
+let undoStack = [];
+let selectedCell = null;
 
-// let sudokuGrid = Array.from({ length: 9 }, () => Array(9).fill(0)); 
-// let undoStack = [];
+function undo() {
+  console.log("==  undo");
+  if (undoStack.length > 0) {
+    const prevState = undoStack.pop();
+    number = prevState;
+    console.log("State after undo:", number); // Debug statement
+    renderGrid();
+  }
+}
 
-// function deepCopyGrid(grid) {
-//   return grid.map(row => [...row]);
-// }
+function removeNumber(rowIndex, colIndex) {
+  if (rowIndex >= 0 && rowIndex < number.length && colIndex >= 0 && colIndex < number[rowIndex].length) {
+    number[rowIndex][colIndex] = " "; // Remove the specific cell value
+    renderGrid(); // update the UI
+  }
+}
 
-// function updateGrid(row, col, value) {
-//   sudokuGrid[row][col] = value;
-//   undoStack.push(deepCopyGrid(sudokuGrid)); 
-//   }
+function eraseSelectedCell() {
+  console.log("== erase ");
+  if (selectedCell !== null) {
+    const [row, col] = selectedCell.parentNode.dataset.row.split('-').map(Number);
+    console.log("Row and column:", row, col); // Debug statement
+    removeNumber(row, col);
+    console.log("Number after erase:", number); // Debug statement
+    undoStack.push(JSON.parse(JSON.stringify(number))); // Save current state for undo
+  }
+}
 
-// function undo() {
-//   if (undoStack.length > 0) {
-//     sudokuGrid = undoStack.pop();
-//     renderGrid();
-//   }
-// }
+function renderGrid() {
+  const container = document.getElementById("number-container");
+  container.innerHTML = '';
+  for (let i = 0; i < number.length; i++) {
+    const row = document.createElement("div");
+    row.className = "number-row";
+    for (let j = 0; j < number[i].length; j++) {
+      const numDiv = document.createElement("div");
+      numDiv.className = "number";
+      numDiv.textContent = number[i][j];
+      numDiv.dataset.row = `${i}-${j}`;
+      buttons.push(numDiv);
+      numDiv.addEventListener('click', (function(i, j) {
+        return function(event) {
+          const target = event.target;
+          const currentValue = target.textContent;
+          if (currentValue === " ") {
+            const newValue = prompt("Enter a new value (1-9):");
+            if (!isValidNumber(newValue)) {
+              alert("Invalid input. Please enter a number between 1 and 9.");
+            } else if (
+              number[i].includes(parseInt(newValue)) || 
+              number.some((row, rowIndex) => rowIndex !== i && row[j] === parseInt(newValue)) || 
+              checkSubGridNew(number, i, j, parseInt(newValue))
+            ) {
+              alert("This number does not match.");
+            } else {
+              target.textContent = newValue;
+              number[i][j] = newValue; 
+              let storedNumber = JSON.parse(localStorage.getItem('number')) || [];
+              if (!storedNumber[i]) {
+                storedNumber[i] = [];
+              }
+              storedNumber[i][j] = newValue;
+              number_set.add(newValue);
+              updateScore();
+              localStorage.setItem('number', JSON.stringify(storedNumber));
+            }
+          }
+        };
+      })(i, j));
+      row.appendChild(numDiv);
+    }
+    container.appendChild(row);
+  }
+}
 
-// function erase(row, col) {
-//   updateGrid(row, col, 0);
-// }
+function resetBoard() {
+  for (let i = 0; i < number.length; i++) {
+    for (let j = 0; j < number[i].length; j++) {
+      if (number[i][j] === " " || (number[i][j] !== initBoard[i][j] && number_set.has(number[i][j]))) {
+        number[i][j] = initBoard[i][j];
+      }
+    }
+  }
+  CaratArray = number.flat();
+  updateScore();
+  renderGrid();
+}
 
-// document.getElementById('undo').addEventListener('click', undo);
-// document.getElementById('erase').addEventListener('click', function() {
-//   let row = parseInt(prompt("Enter row number (0-8)"), 10);
-//   let col = parseInt(prompt("Enter column number (0-8)"), 10);
-//   if (row >= 0 && row <= 8 && col >= 0 && col <= 8) {
-//     erase(row, col);
-//   } else {
-//     alert("Invalid row or column number.");
-//   }
-// });
+document.getElementById('btnUndo').addEventListener('click', undo);
+document.getElementById('erase-btn').addEventListener('click', eraseSelectedCell);
 
-// function renderGrid() {
+function isValidNumber(value) {
+  const num = parseInt(value);
+  return num >= 1 && num <= 9;
+}
+
+function checkSubGridNew(row, col, value) {
+  const num = parseInt(value); // Assuming you want to check against the 'value'
+  const startRow = Math.floor(row / 3) * 3;
+  const startCol = Math.floor(col / 3) * 3;
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      if (startRow + i < number.length && startCol + j < number[0].length && number[startRow + i][startCol + j] === num) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function updateScore() {
+  const emptyCells = number.flat().filter(cell => cell === " ").length;
+    const newScore = (CaratArray.length - emptyCells) + 0;
+    document.getElementById("score").innerHTML = newScore.toString();
   
-//   }
+}
+
+// Initial render and setup
+undoStack.push(JSON.parse(JSON.stringify(number))); // Save initial state
+renderGrid(); // Render the grid
 
 
-
-// renderGrid();

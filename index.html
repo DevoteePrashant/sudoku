@@ -13,8 +13,10 @@
     <input type="text" id="name" required></input>
     <button id="set">Set</button>
     <button id="stop">Stop</button>
-    <!-- <button id="undo">undo</button>
-    <button id="erase">erase</button> -->
+    <div id="controls">
+      <button  onclick="undo()" id="btnUndo">Undo</button>
+      <button onclick="eraseSelectedCell()"  id="erase-btn">Erase</button>
+    </div>    
     <button id="restart">restart</button><br>
     
     <span>score:<div id="score">  </div></span>
