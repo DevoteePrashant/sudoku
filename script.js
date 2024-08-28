@@ -965,12 +965,7 @@ if (newScore === win ) {
 //   return false;
 // }
 
-// function updateScore() {
-//   const emptyCells = number.flat().filter(cell => cell === " ").length;
-//     const newScore = (CaratArray.length - emptyCells) + 0;
-//     document.getElementById("score").innerHTML = newScore.toString();
-  
-// }
+
 
 // // Initial render and setup
 // undoStack.push(JSON.parse(JSON.stringify(number))); // Save initial state
