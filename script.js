@@ -861,7 +861,10 @@ function undo() {
 
 function removeNumber(rowIndex, colIndex) {
   if (rowIndex >= 0 && rowIndex < number.length && colIndex >= 0 && colIndex < number[rowIndex].length) {
-    number[rowIndex][colIndex] = " "; // Remove the specific cell value
+    const lastIndex = number[rowIndex].lastIndexOf(number[rowIndex][colIndex]);
+    if (lastIndex == 1) {
+      number[rowIndex].splice(lastIndex, 1);
+    }
     renderGrid(); // update the UI
   }
 }
