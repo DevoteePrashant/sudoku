@@ -871,6 +871,7 @@ function removeNumber(rowIndex, colIndex) {
 
 function eraseSelectedCell() {
   console.log("== erase ");
+  // selectedCell = ' '
   if (selectedCell !== null) {
     const [row, col] = selectedCell.parentNode.dataset.row.split('-').map(Number);
     console.log("Row and column:", row, col); // Debug statement
@@ -879,6 +880,10 @@ function eraseSelectedCell() {
     undoStack.push(JSON.parse(JSON.stringify(number))); // Save current state for undo
   }
 }
+
+
+
+
 
 function renderGrid() {
   const container = document.getElementById("number-container");

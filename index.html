@@ -8,15 +8,15 @@
 </head>
 <body>
   
-  <table id="number-container" class="text-center"></table>
+  <table id="number-container" data-number-row="1" class="text-center"></table>
   <div class="text-center">
     <div class="timeRanges"></div>
     <input type="text" id="name" required></input>
     <button id="set">Set</button>
     <button id="stop">Stop</button>
     <div id="controls">
-      <button  onclick="undo()" id="btnUndo">Undo</button>
-      <button onclick="eraseSelectedCell()"  id="erase-btn">Erase</button>
+      <button  onclick="undo()" id="btnUndo">Undo All</button>
+      <button onclick="eraseSelectedCell()"  id="erase-btn" style="display: none;" >Erase</button>
     </div>    
     <button id="restart">restart</button><br>
     
@@ -30,6 +30,6 @@
     <span class="text-center" style="color: brown;">RESTART after player stop </span>
     <div id="timeRangesDiv" ></div>
 
-  </div><script src="./script.js"></script>
+  </div><script src="./script.js" ></script>
 </body>
 </html>
