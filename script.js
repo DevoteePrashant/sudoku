@@ -77,10 +77,10 @@ document.getElementById('level1').addEventListener("click", () => {
 
   // Generate HTML elements for the numbers
   for (let i = 0; i < number.length; i++) {
-    var row = document.createElement("div");
+    var row = document.createElement("td");
     row.className = "number-row";
     for (let j = 0; j < number[i].length; j++) {
-      var numDiv = document.createElement("div");
+      var numDiv = document.createElement("input");
       numDiv.className = "number";
       numDiv.textContent = number[i][j];
       buttons.push(numDiv);
@@ -88,7 +88,7 @@ document.getElementById('level1').addEventListener("click", () => {
       numDiv.addEventListener('click', (function(i, j) {
         return function(event) {
           const target = event.target;
-          const currentValue = target.textContent;
+          const currentValue = target.value;
       
           if (currentValue == " ") {
             const newValue = prompt("Enter a new value (1-9):");
@@ -103,7 +103,7 @@ document.getElementById('level1').addEventListener("click", () => {
             ) {
               alert("this number is not match .");
             } else {
-              target.textContent = newValue;
+              target.value = newValue;
               number[i][j] = newValue; 
               let storedNumber = JSON.parse(localStorage.getItem('number')) || [];
               if (!storedNumber[i]) {
