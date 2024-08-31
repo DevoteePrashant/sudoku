@@ -85,7 +85,19 @@
          text-decoration: none;
        }
       
-       
+       .number {
+  /* width: 100%; */
+  padding: 4px 2px;
+  /* margin: 8px 0; */
+  box-sizing: border-box;
+  border: 3px solid #ccc;
+  transition: 0.5s;
+  outline: none;
+}
+
+.number:focus {
+  border: 3px solid #555;
+}
       </style>
 </head>
 <body>
@@ -98,7 +110,7 @@
     <button id="stop">Stop</button>
     <div id="controls">
       <button  onclick="undo()" id="btnUndo" >Undo All</button>
-      <button onclick="eraseSelectedCell()"  id="erase-btn" >Erase</button>
+      <button id="erase-btn">Erase</button>
     </div>    
     <button id="restart">restart</button><br>
     
@@ -919,21 +931,84 @@ function undo() {
   }
 }
 
+let cellIdCounter = 0;
+let selectedCellId = null; // Initialize with null
+
+// Function to create the grid
+function createGrid(size) {
+  const gridContainer = document.getElementById("number-container");
+  gridContainer.innerHTML = ''; // Clear existing grid if any
+  for (let row = 0; row < size; row++) {
+    const rowElement = document.createElement("div");
+    rowElement.className = "number-row";
+    for (let col = 0; col < size; col++) {
+      const cell = document.createElement("input");
+      cell.className = "number";
+      cell.id = `cell-${cellIdCounter}`;
+      cell.dataset.row = `${row}-${col}`;
+      console.log(`Cell created with ID: ${cell.id}`);
+
+      // Bind click event to selectCell function
+      cell.addEventListener("click", function() {
+        selectCell(this); // Pass the element itself
+      });
+
+      rowElement.appendChild(cell);
+      cellIdCounter++;
+    }
+    gridContainer.appendChild(rowElement);
+  }
+  console.log('Grid created and cells are ready to be selected.');
+}
 
 
-function eraseSelectedCell(row, col) {
-  console.log('eraseSelectedCell called with row:', row, 'col:', col);
-  if (number && number[row] && number[row][col] !== " ") {
-    console.log('number[row][col] before erase:', number[row][col]);
-    undoStack.push({ number: JSON.parse(JSON.stringify(number)) });
-    number[row][col] = " ";
-    console.log('number[row][col] after erase:', number[row][col]);
-    renderGrid();
+// Function to select a cell
+function selectCell(cell) {
+  
+  // Remove "selected" class from previously selected cell if any
+  if (selectedCellId) {
+    const previousSelectedCell = document.getElementById(selectedCellId);
+    if (previousSelectedCell) {
+      previousSelectedCell.classList.remove("selected");
+    }
+  }
+
+  // Add "selected" class to the new cell
+  cell.classList.add("selected");
+  selectedCellId = cell.id; // Store the selected cell's ID
+  console.log("Selected cell ID:", selectedCellId);
+}
+
+// Function to erase the selected input
+function eraseSelectedInput(cellId) {
+  const selectedCell = document.getElementById(cellId); 
+
+  if (selectedCell) {
+    if (selectedCell.value) {
+      selectedCell.value = ""; // Clear the cell value
+      console.log('Input value cleared.');
+    } else {
+      console.log('Input value is already empty.');
+    }
   } else {
-    console.log('eraseSelectedCell: invalid row, col, or number structure');
+    console.error(`Error: Element with ID '${cellId}' not found.`);
   }
 }
 
+// Erase button functionality
+document.getElementById("erase-btn").addEventListener("click", function() {
+  if (selectedCellId) {
+    eraseSelectedInput(selectedCellId);
+  } else {
+    console.error("Error: No cell selected. Please select a cell before erasing.");
+  }
+});
+
+// Create the grid on page load
+createGrid(9);
+
+
+let idCounter = 0;
 function renderGrid() {
   const container = document.getElementById("number-container")
   container.innerHTML = ''
@@ -941,8 +1016,10 @@ function renderGrid() {
     const row = document.createElement("div")
     row.className = "number-row"
     for (let j = 0; j < number[i].length; j++){
-      const numDiv = document.createElement("input")
-      numDiv.className = "number"
+const numDiv = document.createElement("input");
+numDiv.className = "number";
+numDiv.id = `numDiv-${idCounter}`;
+idCounter++;
       numDiv.value = number[i][j]
       buttons.push(numDiv)
       numDiv.addEventListener('click', (function(i, j) {
@@ -968,23 +1045,6 @@ function resetBoard() {
 }
 
 document.getElementById('btnUndo').addEventListener('click', undo);
-document.getElementById('erase-btn').addEventListener('click', function() {
-  const selectedCell = document.querySelector('.number.selected');
-  if (selectedCell) {
-    const rowCol = selectedCell.dataset.row.split('-');
-    if (rowCol.length === 2) {
-      const row = Number(rowCol[0]);
-      const col = Number(rowCol[1]);
-      if (!isNaN(row) && !isNaN(col)) {
-        eraseSelectedCell(row, col);
-      } else {
-        console.error("Invalid row or column");
-      }
-    } else {
-      console.error("Invalid row-col format");
-    }
-  }
-});
 
 function isValidNumber(value) {
   const num = parseInt(value);
