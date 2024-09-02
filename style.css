@@ -80,3 +80,6 @@ button{
  }
 
  
+ .focused {
+  background-color: lightblue !important;
+}

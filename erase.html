@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> </title>
+    <style>
+        .focused {
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+
+<div id="number-container"></div>
+<button id="erase-btn">Erase</button>
+
+<script>
+let currentInput = null;
+
+function createInputs(size) {
+    const container = document.getElementById('number-container');
+    container.innerHTML = ''; 
+    for (let row = 0; row < size; row++) {
+        const rowElement = document.createElement("div");
+        rowElement.className = "number-row";
+        for (let col = 0; col < size; col++) {
+            const input = document.createElement("input");
+            input.type = "text";
+            input.className = "number";
+            input.addEventListener('focus', function() {
+                changeBackground(this);
+            });
+            rowElement.appendChild(input);
+        }
+        container.appendChild(rowElement);
+    }
+}
+
+function changeBackground(element) {
+    if (currentInput) {
+        currentInput.classList.remove('focused'); 
+    }
+    element.classList.add('focused');
+    currentInput = element; 
+  }
+  
+document.getElementById("erase-btn").addEventListener("click", function() {
+    if (currentInput) {
+        currentInput.value = "";
+        }
+});
+
+window.onload = createInputs(7);
+</script>
+
+</body>
+</html>
+

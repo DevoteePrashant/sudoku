@@ -98,6 +98,9 @@
 .number:focus {
   border: 3px solid #555;
 }
+.focused {
+            background-color: lightblue !important;
+        }
       </style>
 </head>
 <body>
@@ -810,6 +813,8 @@ for (let i = 0; i < 9; i++) {
     CaratArray.push(puzzle[i][j]);
     console.log('CaratArray :', CaratArray);
 
+
+
     // Make some cells empty
     if (Math.random() < 0.75) {
       number[i][j] = " ";
@@ -920,7 +925,7 @@ function undo() {
     const buttons = [];
     const number_set = new Set();
     for (let i = 0; i < newNumber.length; i++) {
-      for (let j = 0; j < newNumber[i].length - 1; j++) { // changed here
+      for (let j = 0; j < newNumber[i].length; j++) {
         if (newNumber[i][j] !== " ") {
           buttons.push(newNumber[i][j]);
           number_set.add(newNumber[i][j]);
@@ -932,27 +937,24 @@ function undo() {
 }
 
 let cellIdCounter = 0;
-let selectedCellId = null; // Initialize with null
+let currentInput = null;
+// var selectedCellId = null;
 
-// Function to create the grid
 function createGrid(size) {
   const gridContainer = document.getElementById("number-container");
-  gridContainer.innerHTML = ''; // Clear existing grid if any
+  gridContainer.innerHTML = ''; 
   for (let row = 0; row < size; row++) {
     const rowElement = document.createElement("div");
     rowElement.className = "number-row";
     for (let col = 0; col < size; col++) {
       const cell = document.createElement("input");
-      cell.className = "number";
-      cell.id = `cell-${cellIdCounter}`;
+      // cell.type = 'text';
+      cell.className = "number"    
+      cell.id = `cell_${cellIdCounter}`;
       cell.dataset.row = `${row}-${col}`;
-      console.log(`Cell created with ID: ${cell.id}`);
-
-      // Bind click event to selectCell function
-      cell.addEventListener("click", function() {
-        selectCell(this); // Pass the element itself
-      });
-
+      cell.addEventListener('focus', function() {
+            changeBackground(this);
+        });
       rowElement.appendChild(cell);
       cellIdCounter++;
     }
@@ -962,52 +964,30 @@ function createGrid(size) {
 }
 
 
-// Function to select a cell
-function selectCell(cell) {
-  
-  // Remove "selected" class from previously selected cell if any
-  if (selectedCellId) {
-    const previousSelectedCell = document.getElementById(selectedCellId);
-    if (previousSelectedCell) {
-      previousSelectedCell.classList.remove("selected");
-    }
-  }
 
-  // Add "selected" class to the new cell
-  cell.classList.add("selected");
-  selectedCellId = cell.id; // Store the selected cell's ID
-  console.log("Selected cell ID:", selectedCellId);
+
+function changeBackground(element) {
+    if (currentInput) {
+        currentInput.classList.remove('focused'); // Remove the class from the previously focused input
+    }
+    element.classList.add('focused'); // Add the class to the currently focused input
+    currentInput = element; // Update the currentInput reference
 }
 
-// Function to erase the selected input
-function eraseSelectedInput(cellId) {
-  const selectedCell = document.getElementById(cellId); 
-
-  if (selectedCell) {
-    if (selectedCell.value) {
-      selectedCell.value = ""; // Clear the cell value
-      console.log('Input value cleared.');
-    } else {
-      console.log('Input value is already empty.');
-    }
-  } else {
-    console.error(`Error: Element with ID '${cellId}' not found.`);
-  }
-}
-
-// Erase button functionality
 document.getElementById("erase-btn").addEventListener("click", function() {
-  if (selectedCellId) {
-    eraseSelectedInput(selectedCellId);
-  } else {
-    console.error("Error: No cell selected. Please select a cell before erasing.");
+ if (currentInput) {
+    currentInput.value = "";
   }
 });
 
-// Create the grid on page load
-createGrid(9);
 
 
+
+
+window.onload = createGrid(9);
+
+
+var selectedCellIds = [];
 let idCounter = 0;
 function renderGrid() {
   const container = document.getElementById("number-container")
@@ -1018,7 +998,7 @@ function renderGrid() {
     for (let j = 0; j < number[i].length; j++){
 const numDiv = document.createElement("input");
 numDiv.className = "number";
-numDiv.id = `numDiv-${idCounter}`;
+numDiv.id = `${idCounter}`;
 idCounter++;
       numDiv.value = number[i][j]
       buttons.push(numDiv)
@@ -1091,5 +1071,6 @@ undoStack = [{ number: JSON.parse(JSON.stringify(number)) }]; // Save initial st
 renderGrid(undoStack[0]); // Render the grid with the initial state
 
         </script>
+        
 </body>
 </html>
